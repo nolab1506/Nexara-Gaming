@@ -1,0 +1,816 @@
+cat > /mnt/user-data/outputs/nexara.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXARA — Store & Esports Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080f;
+  --s1:#0e1018;
+  --s2:#13151f;
+  --s3:#1a1d2e;
+  --border:#ffffff0c;
+  --border2:#ffffff18;
+  --store:#00e5b0;
+  --store2:#00b8ff;
+  --arena:#ff3c3c;
+  --arena2:#ff9900;
+  --gold:#ffd700;
+  --text:#eef0f8;
+  --t2:#8b90b0;
+  --t3:#444868;
+  --font:'DM Sans',sans-serif;
+  --display:'Rajdhani',sans-serif;
+  --hero:'Bebas Neue',cursive;
+  --mono:'JetBrains Mono',monospace;
+  --r:12px;
+  --r-sm:8px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;min-height:100vh}
+
+/* ══ NOISE TEXTURE ══ */
+body::before{content:'';position:fixed;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+/* ══ TOPBAR ══ */
+.topbar{background:linear-gradient(90deg,var(--store),var(--store2));height:32px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#000;letter-spacing:.06em;gap:20px;position:relative;z-index:10}
+.topbar span{opacity:.6}
+
+/* ══ NAVBAR ══ */
+nav{background:rgba(7,8,15,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:200;height:60px}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:0;text-decoration:none;flex-shrink:0}
+.logo-n{font-family:var(--hero);font-size:28px;letter-spacing:.04em;line-height:1}
+.logo-store{color:var(--store)}
+.logo-arena{color:var(--arena)}
+.logo-dot{width:5px;height:5px;background:var(--t3);border-radius:50%;margin:0 6px}
+.mode-pills{display:flex;gap:4px;background:var(--s2);border:1px solid var(--border);border-radius:100px;padding:3px;flex-shrink:0}
+.mode-pill{padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;background:none;transition:all .2s;font-family:var(--font)}
+.mode-pill.store.active{background:var(--store);color:#000}
+.mode-pill.arena.active{background:var(--arena);color:#fff}
+.mode-pill:not(.active){color:var(--t2)}
+.nav-search{flex:1;max-width:360px;position:relative;margin-left:8px}
+.nav-search input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 14px 8px 36px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
+.nav-search input::placeholder{color:var(--t3)}
+.nav-search input:focus{border-color:var(--store)}
+.nav-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:12px}
+.nav-links{display:flex;gap:2px;margin-left:auto}
+.nav-link{color:var(--t2);font-size:13px;font-weight:500;padding:6px 12px;border-radius:var(--r-sm);text-decoration:none;transition:color .2s,background .2s;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--s2)}
+.nav-link.arena-link:hover{color:var(--arena)}
+.nav-actions{display:flex;gap:8px;flex-shrink:0}
+.nav-btn{border:none;border-radius:var(--r-sm);padding:7px 16px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:all .2s}
+.nav-btn.ghost{background:var(--s2);border:1px solid var(--border2);color:var(--text)}
+.nav-btn.ghost:hover{border-color:var(--store);color:var(--store)}
+.nav-btn.primary{background:var(--store);color:#000}
+.nav-btn.primary:hover{box-shadow:0 0 20px #00e5b050;transform:translateY(-1px)}
+.cart-icon{position:relative;background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:14px;transition:all .2s}
+.cart-icon:hover{border-color:var(--store);color:var(--store)}
+.cart-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--arena);border-radius:50%;border:1px solid var(--bg)}
+
+/* ══ HERO — STORE ══ */
+.hero-store{position:relative;overflow:hidden;background:var(--bg);min-height:580px;display:flex;align-items:center}
+.hero-store::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(0,229,176,.07),transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(0,184,255,.05),transparent 60%)}
+.hs-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,176,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,176,.04) 1px,transparent 1px);background-size:48px 48px}
+.hero-store-inner{max-width:1320px;margin:0 auto;padding:80px 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+@media(max-width:900px){.hero-store-inner{grid-template-columns:1fr}.hero-store-right{display:none}}
+.hs-tag{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,229,176,.25);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--store);letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+.hs-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--store);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.hs-h1{font-family:var(--hero);font-size:clamp(52px,6vw,88px);line-height:.95;letter-spacing:.02em;margin-bottom:20px}
+.hs-h1 .g{background:linear-gradient(90deg,var(--store),var(--store2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs-p{color:var(--t2);font-size:15px;max-width:440px;line-height:1.7;margin-bottom:32px}
+.hs-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.cta-main{background:var(--store);color:#000;border:none;border-radius:var(--r);padding:14px 28px;font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.cta-main:hover{box-shadow:0 8px 32px rgba(0,229,176,.4);transform:translateY(-2px)}
+.cta-ghost{background:transparent;color:var(--text);border:1px solid var(--border2);border-radius:var(--r);padding:14px 28px;font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s}
+.cta-ghost:hover{border-color:var(--store);color:var(--store)}
+.hs-stats{display:flex;gap:32px;flex-wrap:wrap}
+.hs-stat .num{font-family:var(--hero);font-size:32px;color:var(--text);letter-spacing:.02em}
+.hs-stat .lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+/* hero right — floating cards */
+.hero-store-right{position:relative;height:420px}
+.float-card{position:absolute;background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:16px;backdrop-filter:blur(10px)}
+.fc-main{width:260px;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.fc-main::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--store),var(--store2));border-radius:var(--r) var(--r) 0 0}
+.fc-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:12px}
+.fc-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:var(--r-sm);background:var(--s2);margin-bottom:6px;font-size:13px;font-weight:500}
+.fc-item:last-child{margin-bottom:0}
+.fc-item .ei{font-size:20px;width:36px;height:36px;background:var(--s3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fc-item .ep{font-family:var(--mono);font-size:11px;color:var(--store);margin-left:auto}
+.fc-badge{position:absolute;top:-40px;right:-10px;background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:float1 3s ease-in-out infinite}
+.fc-badge2{position:absolute;bottom:-20px;left:-20px;background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:float2 4s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* ══ TRUST BAR ══ */
+.trust-bar{background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 24px}
+.trust-inner{max-width:1320px;margin:0 auto;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap}
+.ti{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--t2)}
+.ti i{color:var(--store);font-size:14px}
+
+/* ══ SECTION BASE ══ */
+.sec{padding:60px 24px;max-width:1320px;margin:0 auto}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.sec-title{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:10px}
+.sec-title span{font-size:22px}
+.see-all{color:var(--store);font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;transition:gap .15s}
+.see-all:hover{gap:8px}
+
+/* ══ CATEGORY CARDS ══ */
+.cat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.cat-row{grid-template-columns:1fr 1fr}}
+.cat-c{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:22px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;text-decoration:none;display:block}
+.cat-c::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.cat-c:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.cat-c:hover::after{opacity:1}
+.cat-c.t1::after{background:linear-gradient(135deg,rgba(0,229,176,.06),transparent)}
+.cat-c.t2::after{background:linear-gradient(135deg,rgba(0,184,255,.06),transparent)}
+.cat-c.t3::after{background:linear-gradient(135deg,rgba(255,153,0,.06),transparent)}
+.cat-c.t4::after{background:linear-gradient(135deg,rgba(255,60,60,.06),transparent)}
+.cat-c .ico{font-size:30px;margin-bottom:12px}
+.cat-c h3{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.04em;margin-bottom:4px}
+.cat-c p{font-size:12px;color:var(--t3);line-height:1.5}
+.cat-c .cnt{position:absolute;top:14px;right:14px;background:var(--s2);border:1px solid var(--border);border-radius:100px;padding:2px 10px;font-size:10px;font-weight:700;color:var(--t3);font-family:var(--mono)}
+
+/* ══ PRODUCT GRID ══ */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.prod-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .22s;display:flex;flex-direction:column}
+.prod-card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.prod-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
+.prod-bade{position:absolute;top:8px;left:8px;border-radius:4px;padding:3px 8px;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.pb-hot{background:#ff3c3c;color:#fff}
+.pb-new{background:var(--store);color:#000}
+.pb-sale{background:var(--arena2);color:#000}
+.prod-body{padding:12px}
+.prod-name{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.04em;margin-bottom:3px}
+.prod-sub{font-size:11px;color:var(--t3)}
+.prod-price{font-family:var(--mono);font-size:12px;color:var(--store);margin-top:8px}
+
+/* ══ SUBSCRIPTION GRID ══ */
+.sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.sub-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.sub-card:hover{transform:translateY(-3px);border-color:var(--border2)}
+.sub-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.sub-name{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:.04em}
+.sub-desc{font-size:12px;color:var(--t3);line-height:1.5}
+.sub-from{font-family:var(--mono);font-size:12px;color:var(--store);margin-top:auto}
+
+/* ══ DIVIDER ══ */
+.mode-divider{position:relative;overflow:hidden;margin:20px 0}
+.mode-divider-inner{background:linear-gradient(135deg,#0f0a00,#1a0000);border-top:1px solid rgba(255,60,60,.2);border-bottom:1px solid rgba(255,60,60,.2);padding:48px 24px;text-align:center;position:relative}
+.mode-divider-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 100% at 50% 50%,rgba(255,60,60,.06),transparent)}
+.md-label{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--arena);margin-bottom:12px}
+.md-title{font-family:var(--hero);font-size:clamp(40px,6vw,80px);letter-spacing:.04em;line-height:1;color:var(--text);margin-bottom:8px}
+.md-title .ar{color:var(--arena)}
+.md-sub{color:var(--t2);font-size:14px;max-width:480px;margin:0 auto}
+
+/* ══ HERO — ARENA ══ */
+.hero-arena{background:linear-gradient(135deg,#0d0000,#150500,#0a0000);position:relative;overflow:hidden;padding:80px 24px}
+.hero-arena::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 30% 50%,rgba(255,60,60,.08),transparent 60%),radial-gradient(ellipse 40% 50% at 80% 30%,rgba(255,153,0,.05),transparent)}
+.ha-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,60,60,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,60,60,.04) 1px,transparent 1px);background-size:48px 48px}
+.ha-inner{max-width:1320px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:900px){.ha-inner{grid-template-columns:1fr}}
+.ha-tag{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,60,60,.3);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:700;color:var(--arena);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.ha-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--arena);animation:pulse 1.5s ease-in-out infinite}
+.ha-h1{font-family:var(--hero);font-size:clamp(52px,6vw,84px);line-height:.95;letter-spacing:.02em;margin-bottom:16px}
+.ha-h1 .r{color:var(--arena)}
+.ha-h1 .o{color:var(--arena2)}
+.ha-p{color:var(--t2);font-size:15px;max-width:420px;line-height:1.7;margin-bottom:28px}
+.cta-arena{background:var(--arena);color:#fff;border:none;border-radius:var(--r);padding:14px 28px;font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.cta-arena:hover{box-shadow:0 8px 32px rgba(255,60,60,.4);transform:translateY(-2px)}
+
+/* ══ TOURNAMENT BRACKET ══ */
+.bracket-wrap{overflow-x:auto;padding-bottom:12px}
+.bracket{display:flex;gap:0;min-width:700px}
+.round{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:8px;padding:0 12px;position:relative}
+.round::after{content:attr(data-label);position:absolute;top:-28px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);font-family:var(--mono)}
+.match{background:var(--s1);border:1px solid var(--border2);border-radius:var(--r-sm);overflow:hidden;position:relative}
+.match.live{border-color:var(--arena)}
+.match.live::before{content:'LIVE';position:absolute;top:0;right:0;background:var(--arena);color:#fff;font-size:8px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:0 var(--r-sm) 0 4px}
+.match-team{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:12px;font-weight:600;border-bottom:1px solid var(--border)}
+.match-team:last-child{border-bottom:none}
+.match-team.winner{color:var(--store);background:rgba(0,229,176,.04)}
+.match-team .flag{font-size:14px}
+.match-team .sc{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:700}
+.match-team.winner .sc{color:var(--store)}
+.final-match{background:linear-gradient(135deg,#1a0000,#0d0000);border:1px solid rgba(255,60,60,.3)!important;box-shadow:0 0 20px rgba(255,60,60,.1)}
+.trophy{text-align:center;padding:8px;font-size:20px;background:rgba(255,215,0,.05);border-bottom:1px solid var(--border)}
+
+/* ══ TOURNAMENT CARDS ══ */
+.tournament-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.t-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .22s;cursor:pointer}
+.t-card:hover{transform:translateY(-3px);border-color:rgba(255,60,60,.3);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.t-card-header{padding:18px 18px 14px;background:linear-gradient(135deg,#150000,#0d0000);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;position:relative}
+.t-game-icon{font-size:28px;width:48px;height:48px;background:var(--s3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.t-card-header h3{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.04em}
+.t-card-header p{font-size:11px;color:var(--t3);margin-top:2px}
+.t-status{position:absolute;top:14px;right:14px;border-radius:100px;padding:3px 10px;font-size:9px;font-weight:700;letter-spacing:.06em}
+.ts-live{background:rgba(255,60,60,.2);color:var(--arena);border:1px solid rgba(255,60,60,.3)}
+.ts-upcoming{background:rgba(255,153,0,.15);color:var(--arena2);border:1px solid rgba(255,153,0,.3)}
+.ts-completed{background:rgba(0,229,176,.1);color:var(--store);border:1px solid rgba(0,229,176,.25)}
+.t-card-body{padding:14px 18px}
+.t-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.t-meta-item{background:var(--s2);border-radius:var(--r-sm);padding:8px 10px}
+.t-meta-item .mk{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.t-meta-item .mv{font-size:13px;font-weight:700;color:var(--text)}
+.t-meta-item .mv.gold{color:var(--gold)}
+.t-register{width:100%;background:var(--arena);color:#fff;border:none;border-radius:var(--r-sm);padding:10px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s}
+.t-register:hover{background:#ff5555;box-shadow:0 4px 16px rgba(255,60,60,.3)}
+.t-register.completed{background:var(--s3);color:var(--t2);cursor:default}
+.t-register.completed:hover{background:var(--s3);box-shadow:none}
+
+/* ══ LEADERBOARD ══ */
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2)}
+.lb-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border)}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:var(--s2)}
+.lb-rank{font-family:var(--mono);font-size:14px;font-weight:700;width:40px;text-align:center}
+.lb-rank.r1{color:var(--gold)}
+.lb-rank.r2{color:#c0c0c0}
+.lb-rank.r3{color:#cd7f32}
+.lb-team{display:flex;align-items:center;gap:10px}
+.lb-team-icon{width:32px;height:32px;border-radius:8px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.lb-team-name{font-weight:700}
+.lb-team-sub{font-size:11px;color:var(--t3)}
+.lb-score{font-family:var(--mono);font-weight:700;color:var(--store)}
+.lb-kd{font-family:var(--mono);color:var(--t2)}
+.lb-badge{display:inline-block;background:rgba(255,60,60,.15);color:var(--arena);border:1px solid rgba(255,60,60,.2);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700}
+.lb-badge.gold{background:rgba(255,215,0,.1);color:var(--gold);border-color:rgba(255,215,0,.25)}
+.lb-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+
+/* ══ MATCH HISTORY ══ */
+.mh-list{display:flex;flex-direction:column;gap:8px}
+.mh-item{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .2s}
+.mh-item:hover{border-color:var(--border2);background:var(--s2)}
+.mh-result{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.04em;flex-shrink:0}
+.mh-w{background:rgba(0,229,176,.15);color:var(--store);border:1px solid rgba(0,229,176,.3)}
+.mh-l{background:rgba(255,60,60,.15);color:var(--arena);border:1px solid rgba(255,60,60,.3)}
+.mh-info h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.mh-info p{font-size:11px;color:var(--t3)}
+.mh-score{margin-left:auto;text-align:right}
+.mh-score .sc{font-family:var(--hero);font-size:22px;letter-spacing:.04em}
+.mh-score .sc .win{color:var(--store)}
+.mh-score .sc .lose{color:var(--arena)}
+.mh-score .dt{font-size:11px;color:var(--t3)}
+.mh-game{font-size:18px;margin-left:4px}
+
+/* ══ REGISTER MODAL ══ */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-ov.show{opacity:1;pointer-events:all}
+.modal-box{background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:36px;max-width:440px;width:92%;transform:scale(.92) translateY(20px);transition:transform .3s;position:relative;overflow:hidden}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--arena),var(--arena2))}
+.modal-ov.show .modal-box{transform:scale(1) translateY(0)}
+.modal-box h3{font-family:var(--hero);font-size:26px;letter-spacing:.04em;margin-bottom:4px}
+.modal-box p{font-size:13px;color:var(--t2);margin-bottom:24px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:6px}
+.form-input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:11px 14px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--arena)}
+.form-select{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:11px 14px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:border-color .2s;cursor:pointer}
+.form-select:focus{border-color:var(--arena)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.submit-btn{width:100%;background:var(--arena);color:#fff;border:none;border-radius:var(--r-sm);padding:13px;font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;margin-top:6px}
+.submit-btn:hover{background:#ff5252;box-shadow:0 6px 20px rgba(255,60,60,.4)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--s2);border:1px solid var(--border);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:12px;transition:all .2s}
+.modal-close:hover{border-color:var(--arena);color:var(--arena)}
+
+/* ══ FOOTER ══ */
+footer{background:var(--s1);border-top:1px solid var(--border2);padding:48px 24px 24px;margin-top:40px}
+.footer-inner{max-width:1320px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+@media(max-width:900px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-top{grid-template-columns:1fr}}
+.fb-logo{display:flex;align-items:center;gap:0;margin-bottom:12px}
+.fb-desc{font-size:13px;color:var(--t3);line-height:1.7;max-width:280px}
+.fc h4{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:14px}
+.fc a{display:block;font-size:13px;color:var(--t2);text-decoration:none;margin-bottom:8px;transition:color .2s}
+.fc a:hover{color:var(--store)}
+.fc a.arena-link:hover{color:var(--arena)}
+.footer-bot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:20px;flex-wrap:wrap;gap:12px}
+.foot-copy{font-size:12px;color:var(--t3)}
+.socials{display:flex;gap:8px}
+.soc{width:32px;height:32px;border-radius:8px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:12px;cursor:pointer;transition:all .2s;text-decoration:none}
+.soc:hover{border-color:var(--store);color:var(--store)}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.au{animation:fadeUp .5s ease both}
+.au2{animation-delay:.1s}
+.au3{animation-delay:.2s}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--t3)}
+
+/* ══ RESPONSIVE HIDE ══ */
+@media(max-width:768px){.nav-links{display:none}.nav-search{max-width:180px}}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  ⚡ Instant Delivery &nbsp;<span>|</span>&nbsp; bKash · Nagad · Rocket · Upay &nbsp;<span>|</span>&nbsp; 🏆 FF Weekly Tournament — Registration Open!
+</div>
+
+<!-- Navbar -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">
+      <span class="logo-n"><span class="logo-store">NEX</span><span class="logo-arena">ARA</span></span>
+    </a>
+    <div class="mode-pills">
+      <button class="mode-pill store active" id="pill-store" onclick="switchMode('store')">Store</button>
+      <button class="mode-pill arena" id="pill-arena" onclick="switchMode('arena')">Arena</button>
+    </div>
+    <div class="nav-search">
+      <i class="fa-solid fa-search"></i>
+      <input type="text" placeholder="Search games, top-ups…" id="nav-search-input">
+    </div>
+    <div class="nav-links">
+      <a href="#store-sec" class="nav-link">Top-Up</a>
+      <a href="#subs-sec" class="nav-link">Subscriptions</a>
+      <a href="#arena-sec" class="nav-link arena-link">🏆 Arena</a>
+      <a href="#" class="nav-link">Support</a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn ghost">Login</button>
+      <button class="nav-btn primary">Sign Up</button>
+      <div class="cart-icon"><i class="fa-solid fa-bag-shopping"></i><div class="cart-dot"></div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ STORE SECTION ══════════════ -->
+<div id="store-section">
+
+<!-- Hero Store -->
+<div class="hero-store">
+  <div class="hs-grid"></div>
+  <div class="hero-store-inner">
+    <div class="au">
+      <div class="hs-tag">Bangladesh #1 Gaming Store</div>
+      <h1 class="hs-h1">TOP-UP<br>ANY GAME.<br><span class="g">INSTANTLY.</span></h1>
+      <p class="hs-p">Free Fire, PUBG, MLBB, Netflix, Crunchyroll, Steam — everything digital in one place. Pay with bKash, Nagad or card.</p>
+      <div class="hs-ctas">
+        <button class="cta-main" onclick="document.getElementById('store-sec').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-bolt"></i> Browse Store</button>
+        <button class="cta-ghost" onclick="switchMode('arena');document.getElementById('arena-sec').scrollIntoView({behavior:'smooth'})">🏆 View Arena</button>
+      </div>
+      <div class="hs-stats">
+        <div class="hs-stat"><div class="num">2M+</div><div class="lbl">Gamers Served</div></div>
+        <div class="hs-stat"><div class="num">60+</div><div class="lbl">Products</div></div>
+        <div class="hs-stat"><div class="num">&lt;2min</div><div class="lbl">Avg Delivery</div></div>
+        <div class="hs-stat"><div class="num">4.9★</div><div class="lbl">Rating</div></div>
+      </div>
+    </div>
+    <div class="hero-store-right au au2">
+      <div class="fc-badge">⚡ Delivered in 47s</div>
+      <div class="float-card fc-main">
+        <div class="fc-title">Popular Right Now</div>
+        <div class="fc-item"><div class="ei">🔥</div> Free Fire 115💎 <span class="ep">৳85</span></div>
+        <div class="fc-item"><div class="ei">🪖</div> PUBG 60 UC <span class="ep">৳95</span></div>
+        <div class="fc-item"><div class="ei">📺</div> Netflix 1 Month <span class="ep">৳350</span></div>
+        <div class="fc-item"><div class="ei">🎮</div> Steam ৳500 <span class="ep">৳560</span></div>
+      </div>
+      <div class="fc-badge2">🛡️ 100% Secure</div>
+    </div>
+  </div>
+</div>
+
+<!-- Trust bar -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="ti"><i class="fa-solid fa-shield-halved"></i> SSL Secured</div>
+    <div class="ti"><i class="fa-solid fa-bolt"></i> Instant Delivery</div>
+    <div class="ti"><i class="fa-solid fa-headset"></i> 24/7 Support</div>
+    <div class="ti"><i class="fa-solid fa-rotate-left"></i> Refund Policy</div>
+    <div class="ti"><i class="fa-solid fa-users"></i> 2M+ Customers</div>
+  </div>
+</div>
+
+<!-- Categories -->
+<div class="sec" id="store-sec">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🎮</span> Categories</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-c t1"><span class="cnt">18+</span><div class="ico">⚡</div><h3>Direct Top-Up</h3><p>FF, PUBG, MLBB, TikTok, Telegram & more</p></div>
+    <div class="cat-c t2"><span class="cnt">8</span><div class="ico">🔑</div><h3>Login Top-Up</h3><p>Clash of Clans, Roblox, Brawl Stars</p></div>
+    <div class="cat-c t3"><span class="cnt">12</span><div class="ico">🎟️</div><h3>Gift Cards</h3><p>Steam, Google Play, PlayStation, Xbox</p></div>
+    <div class="cat-c t4"><span class="cnt">10</span><div class="ico">📺</div><h3>Subscriptions</h3><p>Netflix, Crunchyroll, Spotify & more</p></div>
+  </div>
+</div>
+
+<!-- Trending Games -->
+<div class="sec" style="padding-top:0">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🔥</span> Trending Top-Ups</div>
+    <a href="#" class="see-all">See all <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="prod-grid">
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#1a0800,#3a1000)">🔥<span class="prod-bade pb-hot">HOT</span></div><div class="prod-body"><div class="prod-name">Free Fire</div><div class="prod-sub">Diamonds Top-Up BD</div><div class="prod-price">from ৳85</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#080810,#12120a)">🪖<span class="prod-bade pb-hot">HOT</span></div><div class="prod-body"><div class="prod-name">PUBG Mobile</div><div class="prod-sub">UC Top-Up Bangladesh</div><div class="prod-price">from ৳95</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#000814,#001428)">⚔️<span class="prod-bade pb-new">NEW</span></div><div class="prod-body"><div class="prod-name">Mobile Legends</div><div class="prod-sub">Diamonds Top-Up</div><div class="prod-price">from ৳80</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#000a00,#001a00)">🌟</div><div class="prod-body"><div class="prod-name">TikTok Coins</div><div class="prod-sub">Direct Top-Up</div><div class="prod-price">from ৳100</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#08001a,#14002a)">✈️<span class="prod-bade pb-sale">SALE</span></div><div class="prod-body"><div class="prod-name">Telegram Stars</div><div class="prod-sub">Premium Stars</div><div class="prod-price">from ৳60</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#0a0000,#1a0010)">⚡</div><div class="prod-body"><div class="prod-name">Honkai: Star Rail</div><div class="prod-sub">Oneiric Shards</div><div class="prod-price">from ৳150</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#00080a,#001418)">🧱</div><div class="prod-body"><div class="prod-name">Roblox</div><div class="prod-sub">Robux Top-Up</div><div class="prod-price">from ৳120</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#040614,#080c20)">🏰</div><div class="prod-body"><div class="prod-name">Clash of Clans</div><div class="prod-sub">Gems Top-Up</div><div class="prod-price">from ৳110</div></div></div>
+  </div>
+</div>
+
+<!-- PC Games -->
+<div class="sec" style="padding-top:0">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🖥️</span> PC Games & Gift Cards</div>
+    <a href="#" class="see-all">See all <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="prod-grid">
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#001020,#00050f)">🎮<span class="prod-bade pb-new">PC</span></div><div class="prod-body"><div class="prod-name">Steam Wallet</div><div class="prod-sub">USD Gift Card</div><div class="prod-price">from ৳560</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#001400,#000a00)">🎯</div><div class="prod-body"><div class="prod-name">Google Play</div><div class="prod-sub">Gift Card BD</div><div class="prod-price">from ৳200</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#1a0000,#0a0000)">🎮</div><div class="prod-body"><div class="prod-name">PlayStation</div><div class="prod-sub">PSN Gift Card</div><div class="prod-price">from ৳800</div></div></div>
+    <div class="prod-card"><div class="prod-thumb" style="background:linear-gradient(135deg,#001800,#000e00)">🟢</div><div class="prod-body"><div class="prod-name">Xbox</div><div class="prod-sub">Game Pass / Card</div><div class="prod-price">from ৳900</div></div></div>
+  </div>
+</div>
+
+<!-- Subscriptions -->
+<div class="sec" style="padding-top:0" id="subs-sec">
+  <div class="sec-hd">
+    <div class="sec-title"><span>📺</span> Subscriptions</div>
+    <a href="#" class="see-all">See all <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="sub-grid">
+    <div class="sub-card"><div class="sub-icon" style="background:#e50914">📺</div><div class="sub-name">Netflix</div><div class="sub-desc">1 screen to 4 screen plans. HD & 4K available.</div><div class="sub-from">from ৳350/mo</div></div>
+    <div class="sub-card"><div class="sub-icon" style="background:#ff640a">🌸</div><div class="sub-name">Crunchyroll</div><div class="sub-desc">Anime streaming — Fan, Mega Fan, Ultimate plans.</div><div class="sub-from">from ৳200/mo</div></div>
+    <div class="sub-card"><div class="sub-icon" style="background:#1db954">🎵</div><div class="sub-name">Spotify</div><div class="sub-desc">Premium individual & family plans.</div><div class="sub-from">from ৳180/mo</div></div>
+    <div class="sub-card"><div class="sub-icon" style="background:#5865f2">💬</div><div class="sub-name">Discord Nitro</div><div class="sub-desc">Nitro Basic & Nitro full — server boosts included.</div><div class="sub-from">from ৳280/mo</div></div>
+    <div class="sub-card"><div class="sub-icon" style="background:#ff0000">▶️</div><div class="sub-name">YouTube Premium</div><div class="sub-desc">Ad-free, background play, YouTube Music.</div><div class="sub-from">from ৳220/mo</div></div>
+    <div class="sub-card"><div class="sub-icon" style="background:#2591cc">✈️</div><div class="sub-name">Telegram Premium</div><div class="sub-desc">4GB uploads, faster downloads, exclusive stickers.</div><div class="sub-from">from ৳250/mo</div></div>
+  </div>
+</div>
+
+</div><!-- end store-section -->
+
+<!-- ══ MODE DIVIDER ══ -->
+<div class="mode-divider" id="arena-sec">
+  <div class="mode-divider-inner">
+    <div class="md-label">Nexara Arena — Esports Division</div>
+    <div class="md-title">ENTER THE <span class="ar">ARENA</span></div>
+    <div class="md-sub">Compete in Free Fire & PUBG tournaments. Every match recorded. Every champion remembered — forever.</div>
+  </div>
+</div>
+
+<!-- ══════════════ ARENA SECTION ══════════════ -->
+<div id="arena-section">
+
+<!-- Arena Hero -->
+<div class="hero-arena">
+  <div class="ha-grid"></div>
+  <div class="ha-inner">
+    <div class="au">
+      <div class="ha-tag">Live Tournaments · BD Esports</div>
+      <h1 class="ha-h1"><span class="r">COMPETE.</span><br><span class="o">WIN.</span><br>DOMINATE.</h1>
+      <p class="ha-p">UCL-style tournament brackets for Free Fire & PUBG. Group stage, knockouts, grand final. Match records saved for a lifetime.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="cta-arena" onclick="openRegModal()"><i class="fa-solid fa-trophy"></i> Register Team</button>
+        <button class="cta-ghost" style="font-family:var(--display);letter-spacing:.06em" onclick="document.getElementById('bracket-sec').scrollIntoView({behavior:'smooth'})">View Bracket</button>
+      </div>
+    </div>
+    <div class="au au2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--s1);border:1px solid rgba(255,60,60,.2);border-radius:var(--r);padding:16px;text-align:center">
+        <div style="font-family:var(--hero);font-size:36px;color:var(--arena);letter-spacing:.02em">48</div>
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em">Teams This Season</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid rgba(255,153,0,.2);border-radius:var(--r);padding:16px;text-align:center">
+        <div style="font-family:var(--hero);font-size:36px;color:var(--arena2);letter-spacing:.02em">৳50K</div>
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em">Prize Pool</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid rgba(0,229,176,.15);border-radius:var(--r);padding:16px;text-align:center">
+        <div style="font-family:var(--hero);font-size:36px;color:var(--store);letter-spacing:.02em">240+</div>
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em">Matches Played</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:16px;text-align:center">
+        <div style="font-family:var(--hero);font-size:36px;color:var(--gold);letter-spacing:.02em">∞</div>
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em">Records Kept</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active Tournaments -->
+<div class="sec">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🏆</span> Active Tournaments</div>
+    <a href="#" class="see-all" style="color:var(--arena)">See all <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="tournament-grid">
+    <div class="t-card">
+      <div class="t-card-header">
+        <div class="t-game-icon">🔥</div>
+        <div><h3>FF Weekly Cup #12</h3><p>Free Fire · Solo & Squad</p></div>
+        <div class="t-status ts-live">🔴 LIVE</div>
+      </div>
+      <div class="t-card-body">
+        <div class="t-meta">
+          <div class="t-meta-item"><div class="mk">Prize Pool</div><div class="mv gold">৳15,000</div></div>
+          <div class="t-meta-item"><div class="mk">Teams</div><div class="mv">32/32</div></div>
+          <div class="t-meta-item"><div class="mk">Stage</div><div class="mv">Quarterfinal</div></div>
+          <div class="t-meta-item"><div class="mk">Format</div><div class="mv">UCL Style</div></div>
+        </div>
+        <button class="t-register completed">Registration Closed</button>
+      </div>
+    </div>
+    <div class="t-card">
+      <div class="t-card-header">
+        <div class="t-game-icon">🪖</div>
+        <div><h3>PUBG Clash Season 4</h3><p>PUBG Mobile · Squad</p></div>
+        <div class="t-status ts-upcoming">⏳ UPCOMING</div>
+      </div>
+      <div class="t-card-body">
+        <div class="t-meta">
+          <div class="t-meta-item"><div class="mk">Prize Pool</div><div class="mv gold">৳20,000</div></div>
+          <div class="t-meta-item"><div class="mk">Teams</div><div class="mv">18/48</div></div>
+          <div class="t-meta-item"><div class="mk">Starts</div><div class="mv">Jun 1</div></div>
+          <div class="t-meta-item"><div class="mk">Format</div><div class="mv">UCL Style</div></div>
+        </div>
+        <button class="t-register" onclick="openRegModal()">Register Now →</button>
+      </div>
+    </div>
+    <div class="t-card">
+      <div class="t-card-header">
+        <div class="t-game-icon">🔥</div>
+        <div><h3>FF Monthly Grand Prix</h3><p>Free Fire · All Modes</p></div>
+        <div class="t-status ts-upcoming">⏳ UPCOMING</div>
+      </div>
+      <div class="t-card-body">
+        <div class="t-meta">
+          <div class="t-meta-item"><div class="mk">Prize Pool</div><div class="mv gold">৳50,000</div></div>
+          <div class="t-meta-item"><div class="mk">Teams</div><div class="mv">6/64</div></div>
+          <div class="t-meta-item"><div class="mk">Starts</div><div class="mv">Jun 15</div></div>
+          <div class="t-meta-item"><div class="mk">Format</div><div class="mv">UCL Style</div></div>
+        </div>
+        <button class="t-register" onclick="openRegModal()">Register Now →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Live Bracket -->
+<div class="sec" style="padding-top:0" id="bracket-sec">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🗂️</span> FF Weekly Cup #12 — Live Bracket</div>
+    <span style="font-size:11px;color:var(--arena);font-weight:700;font-family:var(--mono)">🔴 LIVE NOW</span>
+  </div>
+  <div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px 20px">
+    <div class="bracket-wrap">
+      <div class="bracket" style="margin-top:28px">
+        <!-- QF -->
+        <div class="round" data-label="Quarter Finals">
+          <div class="match live">
+            <div class="match-team winner"><span class="flag">🇧🇩</span> Team Alpha <span class="sc">14</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> Squad Zero <span class="sc">8</span></div>
+          </div>
+          <div class="match">
+            <div class="match-team winner"><span class="flag">🇧🇩</span> PhoenixFF <span class="sc">12</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> Rush Gang <span class="sc">7</span></div>
+          </div>
+          <div class="match">
+            <div class="match-team winner"><span class="flag">🇧🇩</span> NightOwls <span class="sc">16</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> ViperX <span class="sc">11</span></div>
+          </div>
+          <div class="match">
+            <div class="match-team winner"><span class="flag">🇧🇩</span> StormRise <span class="sc">13</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> GhostFF <span class="sc">9</span></div>
+          </div>
+        </div>
+        <!-- SF -->
+        <div class="round" data-label="Semi Finals">
+          <div class="match live">
+            <div class="match-team winner"><span class="flag">🇧🇩</span> Team Alpha <span class="sc">🔴</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> PhoenixFF <span class="sc">—</span></div>
+          </div>
+          <div class="match">
+            <div class="match-team"><span class="flag">🇧🇩</span> NightOwls <span class="sc">—</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> StormRise <span class="sc">—</span></div>
+          </div>
+        </div>
+        <!-- Final -->
+        <div class="round" data-label="Grand Final">
+          <div class="match final-match" style="margin:auto">
+            <div class="trophy">🏆</div>
+            <div class="match-team"><span class="flag">🇧🇩</span> TBD <span class="sc">—</span></div>
+            <div class="match-team"><span class="flag">🇧🇩</span> TBD <span class="sc">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Leaderboard -->
+<div class="sec" style="padding-top:0">
+  <div class="sec-hd">
+    <div class="sec-title"><span>🥇</span> All-Time Leaderboard</div>
+    <a href="#" class="see-all" style="color:var(--arena)">Full board <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="lb-wrap">
+    <table class="lb-table">
+      <thead><tr>
+        <th style="width:50px">Rank</th>
+        <th>Team</th>
+        <th>Game</th>
+        <th>W / L</th>
+        <th>K/D</th>
+        <th>Points</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="lb-rank r1">1</td><td><div class="lb-team"><div class="lb-team-icon">🔥</div><div><div class="lb-team-name">Team Alpha</div><div class="lb-team-sub">Dhaka Division</div></div></div></td><td>Free Fire</td><td class="lb-kd">22 / 3</td><td class="lb-kd">4.8</td><td class="lb-score">2840</td><td><span class="lb-badge gold">Champion</span></td></tr>
+        <tr><td class="lb-rank r2">2</td><td><div class="lb-team"><div class="lb-team-icon">🌙</div><div><div class="lb-team-name">NightOwls</div><div class="lb-team-sub">Chittagong</div></div></div></td><td>Free Fire</td><td class="lb-kd">19 / 5</td><td class="lb-kd">3.9</td><td class="lb-score">2610</td><td><span class="lb-badge">Finalist</span></td></tr>
+        <tr><td class="lb-rank r3">3</td><td><div class="lb-team"><div class="lb-team-icon">🌩️</div><div><div class="lb-team-name">StormRise</div><div class="lb-team-sub">Sylhet</div></div></div></td><td>PUBG</td><td class="lb-kd">17 / 6</td><td class="lb-kd">3.5</td><td class="lb-score">2390</td><td><span class="lb-badge">Semi</span></td></tr>
+        <tr><td class="lb-rank" style="color:var(--t2)">4</td><td><div class="lb-team"><div class="lb-team-icon">🐦</div><div><div class="lb-team-name">PhoenixFF</div><div class="lb-team-sub">Rajshahi</div></div></div></td><td>Free Fire</td><td class="lb-kd">15 / 8</td><td class="lb-kd">3.1</td><td class="lb-score">2100</td><td><span class="lb-badge">Semi</span></td></tr>
+        <tr><td class="lb-rank" style="color:var(--t2)">5</td><td><div class="lb-team"><div class="lb-team-icon">👻</div><div><div class="lb-team-name">GhostFF</div><div class="lb-team-sub">Khulna</div></div></div></td><td>Free Fire</td><td class="lb-kd">12 / 10</td><td class="lb-kd">2.7</td><td class="lb-score">1850</td><td><span class="lb-badge">Quarter</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Match History -->
+<div class="sec" style="padding-top:0">
+  <div class="sec-hd">
+    <div class="sec-title"><span>📋</span> Match Records — Lifetime</div>
+    <a href="#" class="see-all" style="color:var(--arena)">All records <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="mh-list">
+    <div class="mh-item">
+      <div class="mh-result mh-w">WIN</div>
+      <div class="mh-game">🔥</div>
+      <div class="mh-info"><h4>FF Weekly Cup #12 — QF</h4><p>Team Alpha vs Squad Zero</p></div>
+      <div class="mh-score"><div class="sc"><span class="win">14</span> – <span class="lose">8</span></div><div class="dt">May 25, 2026 · 9:00 PM</div></div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-result mh-w">WIN</div>
+      <div class="mh-game">🔥</div>
+      <div class="mh-info"><h4>FF Weekly Cup #11 — Final</h4><p>Team Alpha vs NightOwls</p></div>
+      <div class="mh-score"><div class="sc"><span class="win">18</span> – <span class="lose">14</span></div><div class="dt">May 18, 2026 · 8:30 PM</div></div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-result mh-l">LOSS</div>
+      <div class="mh-game">🪖</div>
+      <div class="mh-info"><h4>PUBG Clash S3 — Semi Final</h4><p>StormRise vs NightOwls</p></div>
+      <div class="mh-score"><div class="sc"><span class="win">210</span> – <span class="lose">195</span></div><div class="dt">May 12, 2026 · 7:00 PM</div></div>
+    </div>
+    <div class="mh-item">
+      <div class="mh-result mh-w">WIN</div>
+      <div class="mh-game">🔥</div>
+      <div class="mh-info"><h4>FF Monthly Grand Prix — Final</h4><p>PhoenixFF vs GhostFF</p></div>
+      <div class="mh-score"><div class="sc"><span class="win">22</span> – <span class="lose">16</span></div><div class="dt">Apr 30, 2026 · 9:00 PM</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end arena-section -->
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="fb-logo"><span class="logo-n" style="font-family:var(--hero);font-size:26px;letter-spacing:.04em"><span class="logo-store">NEX</span><span class="logo-arena">ARA</span></span></div>
+        <p class="fb-desc">Bangladesh's #1 gaming store & esports platform. Instant top-ups, subscriptions, and competitive tournaments — all in one place.</p>
+      </div>
+      <div class="fc">
+        <h4>Store</h4>
+        <a href="#">Free Fire Diamonds</a>
+        <a href="#">PUBG Mobile UC</a>
+        <a href="#">Netflix Subscription</a>
+        <a href="#">Steam Gift Cards</a>
+        <a href="#">Crunchyroll</a>
+      </div>
+      <div class="fc">
+        <h4>Arena</h4>
+        <a href="#" class="arena-link">Active Tournaments</a>
+        <a href="#" class="arena-link">Register Team</a>
+        <a href="#" class="arena-link">Leaderboard</a>
+        <a href="#" class="arena-link">Match Records</a>
+        <a href="#" class="arena-link">Results Archive</a>
+      </div>
+      <div class="fc">
+        <h4>Company</h4>
+        <a href="#">About Nexara</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Refund Policy</a>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div class="foot-copy">© 2024–2026 Nexara. All rights reserved. Game trademarks belong to their respective owners.</div>
+      <div class="socials">
+        <a href="#" class="soc"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="soc"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#" class="soc"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#" class="soc"><i class="fa-brands fa-discord"></i></a>
+        <a href="#" class="soc"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Registration Modal -->
+<div class="modal-ov" id="reg-modal" onclick="closeRegModal(event)">
+  <div class="modal-box">
+    <div class="modal-close" onclick="document.getElementById('reg-modal').classList.remove('show')"><i class="fa-solid fa-xmark"></i></div>
+    <h3>REGISTER TEAM</h3>
+    <p>Fill in your team details to join the tournament.</p>
+    <div class="form-group">
+      <label>Team Name</label>
+      <input class="form-input" type="text" placeholder="e.g. Team Alpha BD">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Game</label>
+        <select class="form-select">
+          <option>Free Fire</option>
+          <option>PUBG Mobile</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mode</label>
+        <select class="form-select">
+          <option>Squad (4v4)</option>
+          <option>Duo (2v2)</option>
+          <option>Solo</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Captain In-Game ID</label>
+      <input class="form-input" type="text" placeholder="Your Player UID">
+    </div>
+    <div class="form-group">
+      <label>Contact (WhatsApp / Telegram)</label>
+      <input class="form-input" type="text" placeholder="+880 1X XX XX XXXX">
+    </div>
+    <div class="form-group">
+      <label>Tournament</label>
+      <select class="form-select">
+        <option>PUBG Clash Season 4 — Jun 1</option>
+        <option>FF Monthly Grand Prix — Jun 15</option>
+      </select>
+    </div>
+    <button class="submit-btn" onclick="submitReg()">⚡ Confirm Registration</button>
+  </div>
+</div>
+
+<script>
+let currentMode='store';
+
+function switchMode(mode){
+  currentMode=mode;
+  document.getElementById('pill-store').classList.toggle('active',mode==='store');
+  document.getElementById('pill-arena').classList.toggle('active',mode==='arena');
+  const target=mode==='arena'?'arena-sec':'store-sec';
+  document.getElementById(target).scrollIntoView({behavior:'smooth'});
+}
+
+function openRegModal(){document.getElementById('reg-modal').classList.add('show')}
+function closeRegModal(e){if(e.target.id==='reg-modal')document.getElementById('reg-modal').classList.remove('show')}
+
+function submitReg(){
+  const inputs=document.querySelectorAll('#reg-modal .form-input');
+  let ok=true;
+  inputs.forEach(i=>{if(!i.value.trim()){i.style.borderColor='var(--arena)';ok=false;}else{i.style.borderColor=''}});
+  if(!ok)return;
+  document.getElementById('reg-modal').classList.remove('show');
+  setTimeout(()=>{
+    const toast=document.createElement('div');
+    toast.style.cssText='position:fixed;bottom:24px;right:24px;background:#0e1018;border:1px solid rgba(0,229,176,.4);border-radius:12px;padding:16px 20px;font-size:14px;font-weight:600;color:#fff;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:fadeUp .3s ease';
+    toast.innerHTML='✅ Team registered! We\'ll contact you via WhatsApp.';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),4000);
+  },300);
+}
+
+// nav search highlight
+document.getElementById('nav-search-input').addEventListener('focus',function(){
+  this.parentElement.querySelector('i').style.color='var(--store)';
+});
+document.getElementById('nav-search-input').addEventListener('blur',function(){
+  this.parentElement.querySelector('i').style.color='';
+});
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
